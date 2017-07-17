@@ -1,14 +1,12 @@
 pipeline{
    agent { label '192.168.16.78' }
    stages{
-
        stage('Getcode') {
           steps{
                sh  script: '''
                    echo "getcode";
                '''          
           }
-
        }
        stage('Build') {
            steps{
