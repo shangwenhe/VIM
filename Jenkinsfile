@@ -3,19 +3,26 @@ pipeline{
    stages{
 
        stage('Getcode') {
-            sh  script: '''
-                echo "getcode";
-            '''
+          steps{
+               sh  script: '''
+                   echo "getcode";
+               '''          
+          }
+
        }
        stage('Build') {
+           steps{
             sh  script: '''
                 echo "build";
             '''
+           }
        }
        stage('Results') {
+           steps{
             sh  script: '''
                 echo "results";
             '''
+           }
        }
    }
    post{
