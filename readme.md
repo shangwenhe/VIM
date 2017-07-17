@@ -1,5 +1,4 @@
 ## 初始化过程
-
 正如多数 linux 软件，vim 的配置文件分为系统配置文件 /etc/vimrc，/usr/share/vim/ 和用户配置文件 ~/.vimrc，~/.vim/。
 
 vim 的配置文件载入过程为：
