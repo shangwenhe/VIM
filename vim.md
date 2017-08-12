@@ -119,3 +119,82 @@ function git_branch {
 
 export PS1='\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;31m\]\W\$$(git_branch)\[\033[00m\] '
 ```
+## 安装插件
+```
+" set the runtime path to include Vundle and initialize
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+" alternatively, pass a path where Vundle should install plugins
+"call vundle#begin('~/some/path/here')
+
+" let Vundle manage Vundle, required
+Plugin 'VundleVim/Vundle.vim'
+
+" plugin from http://vim-scripts.org/vim/scripts.html
+Plugin 'https://github.com/vim-scripts/L9'
+Plugin 'editorconfig/editorconfig-vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'beautify-web/js-beautify'
+Plugin 'maksimr/vim-jsbeautify'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'tomtom/tlib_vim'
+Plugin 'tomtom/tskeleton_vim'
+Plugin 'mxw/vim-jsx'
+Plugin 'posva/vim-vue'
+
+
+
+" All of your Plugins must be added before the following line
+call vundle#end()            " required
+filetype plugin indent on    " required
+" To ignore plugin indent changes, instead use:
+"filetype plugin on
+"
+" Brief help
+" :PluginList       - lists configured plugins
+" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
+" :PluginSearch foo - searches for foo; append `!` to refresh local cache
+" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
+```
+## 插件调用
+``` 
+".vimrc
+" map <c-f> :call JsBeautify()<cr>
+" or
+autocmd FileType javascript noremap <buffer>  <c-f> :call JsBeautify()<cr>
+" for json
+" autocmd FileType json noremap <buffer> <c-f> :call JsonBeautify()<cr>
+autocmd FileType json noremap <buffer> <c-f> :call JsonBeautify()<cr>
+" for jsx
+autocmd FileType jsx noremap <buffer> <c-f> :call JsxBeautify()<cr>
+" for html
+autocmd FileType html noremap <buffer> <c-f> :call HtmlBeautify()<cr>
+" for css or scss
+autocmd FileType css,less noremap <buffer> <c-f> :call CSSBeautify()<cr>
+" autocmd BufNewFile *.php 0r  ~/.vim/bundle/skeletons.vim/skeletons/skeleton.php
+
+autocmd FileType *  noremap <buffer> <c-x> :%s/\(\s*\)$//g <cr>
+
+
+let tskelUserName = '商文河'
+let tskelUserEmail = 'shangwenhe@vipkid.com.cn'
+let tskelLicense = '`$(data %Y)`©北京大米科技有限公司'
+let tskelDateFormat = "%Y-%m-%d %H:%M"
+let tskelUserCompany = '北京大米科技有限公司'
+
+autocmd BufNewFile *.class\.js  TSkeletonSetup template.class.js
+autocmd BufNewFile *.js,*.jsx  TSkeletonSetup template.js
+autocmd BufNewFile *.html  TSkeletonSetup template.html
+autocmd BufNewFile *.css  TSkeletonSetup template.css
+autocmd BufNewFile *.tmpl  TSkeletonSetup template.tmpl
+
+
+"autocmd BufNewFile /here/*.suffix TSkeletonSetup othertemplate.suffix
+autocmd FileType jsx set filetype=js
+
+" autocmd FileType jess  noremap <buffer> <c-f> :call normal()<cr>
+
+autocmd FileType vue syntax sync fromstart
+" autocmd BufRead,BufNewFile *.vue setlocal filetype=vue.html.javascript.css
+
+```
