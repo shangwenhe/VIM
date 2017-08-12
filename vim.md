@@ -93,3 +93,29 @@ set mouse=a         " Enable the use of the mouse.
 filetype plugin indent on
 syntax on
 ```
+
+
+# 上下键搜索历史记录
+
+```
+if [[ $- == *i* ]]; then
+  bind '"\e[A": history-search-backward'
+  bind '"\e[B": history-search-forward'
+fi
+```
+
+
+# git仓库目录下显示当前所在分支
+```
+function git_branch {
+   branch="`git branch 2>/dev/null | grep "^\*" | sed -e "s/^\*\ //"`"
+   if [ "${branch}" != "" ];then
+       if [ "${branch}" = "(no branch)" ];then
+           branch="(`git rev-parse --short HEAD`...)"
+       fi
+       echo "[$branch]"
+   fi
+}
+
+export PS1='\[\033[01;32m\]\u@\h\[\033[00m\] \[\033[01;31m\]\W\$$(git_branch)\[\033[00m\] '
+```
