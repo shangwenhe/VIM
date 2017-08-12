@@ -177,10 +177,10 @@ autocmd FileType *  noremap <buffer> <c-x> :%s/\(\s*\)$//g <cr>
 
 
 let tskelUserName = '商文河'
-let tskelUserEmail = 'shangwenhe@vipkid.com.cn'
-let tskelLicense = '`$(data %Y)`©北京大米科技有限公司'
+let tskelUserEmail = 'shangwenhe@baidu.com'
+let tskelLicense = '`$(data %Y)`©北京百度在线有限公司'
 let tskelDateFormat = "%Y-%m-%d %H:%M"
-let tskelUserCompany = '北京大米科技有限公司'
+let tskelUserCompany = '北京百度在线有限公司'
 
 autocmd BufNewFile *.class\.js  TSkeletonSetup template.class.js
 autocmd BufNewFile *.js,*.jsx  TSkeletonSetup template.js
