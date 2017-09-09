@@ -1,3 +1,7 @@
+# 写在前面的话
+## 由于引入vue不是在window对象下导致的问题
+
+
 ## 引入vue-router后路由不生效
 #### 错误方式 
 ``` javascript 
