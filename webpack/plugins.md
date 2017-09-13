@@ -3,7 +3,7 @@
 # 因为plugins应该为数组形式
 ```
 
-# test plugin 的所有事件
+# plugin 的所有事件
 ```javascript
 'use strict';
 
