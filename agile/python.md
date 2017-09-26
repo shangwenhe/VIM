@@ -7,6 +7,10 @@ http://python-jenkins.readthedocs.io/en/latest/api.html
 
 # 登录
 
+```text
+{SSHA}jPb70WfHVQKoEXt2VvP1yXCqguwRJTJ9 
+```
+
 ## 登录
 Jenkins password 验证
 
