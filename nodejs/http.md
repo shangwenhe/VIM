@@ -25,3 +25,10 @@ http.request({
         'Content-Length': Buffer.from(postData).length,
       })
 ```
+
+```text
+JSON.stringfy(data).length
+在计算英文字符时，是没有问题在但如果有中文存在就会出现问题。length计算的不是字节长度。
+所以需要修改为Buffer.from(postData).length，去计算需要上传数据的长度
+
+```
