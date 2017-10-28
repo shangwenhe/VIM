@@ -4,7 +4,7 @@
 ```javascript
 let data = {key: '这是一些中文'}
 http.request({
-      hostname: 'vos-api.vipkid.com.cn',
+      hostname: 'xxxxx.com',
       port: 80,
       path: '/',
       headers: {
@@ -17,7 +17,7 @@ http.request({
 ```javascript
 let data = {key: '这是一些中文'}
 http.request({
-      hostname: 'vos-api.vipkid.com.cn',
+      hostname: 'xxxxx.com',
       port: 80,
       path: '/',
       headers: {
