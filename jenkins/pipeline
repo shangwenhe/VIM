@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    environment {
+        PATH = "/home/jenkins_home/usr/local/mongodb/bin:/home/jenkins_home/usr/local/node/bin:/usr/local/jdk/bin:/usr/local/maven/bin:/bin:/usr/local/jdk/bin:/usr/local/maven/bin:/bin:/usr/local/sbin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin"
+    }
+    parameters {
+        string(name: 'name', defaultValue: 'MrJenkins', description: 'Who-should I say hello to?')
+        string(name: 'commitId', defaultValue:'', description: 'tagID')
+        string(name: 'gitssh', defaultValue:'', description: 'tagID')
+        
+    }
+    stages {
+        stage('getcode') {
+            steps {
+                echo "Hello ${commitId},${name}"
+                git credentialsId: 'bc534ecb-e8df-4c72-9a49-835954363f9b', url: '${gitssh}'
+                sh 'git checkout --quiet --detach ${commitId}; git status;'
+            }
+            post {
+                always {
+                    sh returnStdout: true, script: 'curl \"http://www.baidu.com/${name}\"'
+                }
+                failure {
+                    mail body: 'getcode The Pipeline failed :(', subject: 'error', to: ''
+                }
+            }
+        }
+        stage('build') {
+            steps {
+                sh 'cat ./build.sh'
+            }
+            post {
+                always {
+                    sh returnStdout: true, script: 'curl \"http://www.baidu.com/${name}\"'
+                }
+                failure {
+                    mail body: 'build The Pipeline failed :(', subject: 'error', to: ''
+                }
+                success {
+                    sh returnStdout: true, script: 'cd dist && tar czvf ./archive.tar ./*  --exclude ./node_modules/'
+                    archiveArtifacts artifacts: 'dist/archive.tar';
+                    sh returnStdout: true, script: 'wget -O www.index.html -c  http://www.baidu.com'
+                }
+            }
+        }
+    }
+}
