@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# chkconfig:   35 85 15
+# description:  mongod server
+
 # Source function library.
 . /etc/rc.d/init.d/functions
 
