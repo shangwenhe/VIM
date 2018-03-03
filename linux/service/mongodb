@@ -1,33 +1,30 @@
 #!/bin/sh
-#
 
+# Source function library.
+. /etc/rc.d/init.d/functions
 
-make_dirs() {
-   # make required directories
-   user=`$nginx -V 2>&1 | grep "configure arguments:.*--user=" | sed 's/[^*]*--user=\([^ ]*\).*/\1/g' -`
-   if [ -n "$user" ]; then
-      if [ -z "`grep $user /etc/passwd`" ]; then
-         useradd -M -s /bin/nologin $user
-      fi
-      options=`$nginx -V 2>&1 | grep 'configure arguments:'`
-      for opt in $options; do
-          if [ `echo $opt | grep '.*-temp-path'` ]; then
-              value=`echo $opt | cut -d "=" -f 2`
-              if [ ! -d "$value" ]; then
-                  # echo "creating" $value
-                  mkdir -p $value && chown -R $user $value
-              fi
-          fi
-       done
-    fi
-}
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "$NETWORKING" = "no" ] && exit 0
+
+mongod="/usr/local/mongodb/rhel62-3.6.3/bin/mongod"
+prog=$(basename $mongod)
+
+# 配置文件
+MONGOD_CONF_FILE="/home/nginx/mongo/config/agile.conf"
+# pid文件
+MONGOD_ID="/home/nginx/mongo/mongod.pid"
+# 锁定文件
+lockfile=/var/lock/subsys/mongodb
+
 
 start() {
-    [ -x $nginx ] || exit 5
-    [ -f $NGINX_CONF_FILE ] || exit 6
-    make_dirs
+    [ -x $mongod ] || exit 5
+    [ -f $MONGOD_CONF_FILE ] || exit 6
     echo -n $"Starting $prog: "
-    daemon $nginx -c $NGINX_CONF_FILE
+    daemon $mongod -f $MONGOD_CONF_FILE
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
@@ -44,27 +41,11 @@ stop() {
 }
 
 restart() {
-    configtest || return $?
     stop
     sleep 1
     start
 }
 
-reload() {
-    configtest || return $?
-    echo -n $"Reloading $prog: "
-    killproc $nginx -HUP
-    RETVAL=$?
-    echo
-}
-
-force_reload() {
-    restart
-}
-
-configtest() {
-  $nginx -t -c $NGINX_CONF_FILE
-}
 
 rh_status() {
     status $prog
@@ -83,23 +64,13 @@ case "$1" in
         rh_status_q || exit 0
         $1
         ;;
-    restart|configtest)
+    restart)
         $1
-        ;;
-    reload)
-        rh_status_q || exit 7
-        $1
-        ;;
-    force-reload)
-        force_reload
         ;;
     status)
         rh_status
         ;;
-    condrestart|try-restart)
-        rh_status_q || exit 0
-            ;;
     *)
-        echo $"Usage: $0 {start|stop|status|restart|condrestart|try-restart|reload|force-reload|configtest}"
+        echo $"Usage: $0 {start|stop|status|restart}"
         exit 2
 esac
