@@ -1,0 +1,17 @@
+/var/log/nginx/*.log {
+    missingok
+    notifempty
+    daily
+    rotate 1
+    dateext
+    dateformat
+    createolddir 644 nginx root
+    olddir /var/log/nginx/backups
+    sharedscripts
+    postrotate
+        mv /var/log/nginx/backups /var/log/nginx/$(date "+%Y%m%d%H%M%S")
+        if [ -f /var/run/nginx.pid ]; then
+            kill -USR1 `cat /var/run/nginx.pid`
+        fi
+    endscript
+}
