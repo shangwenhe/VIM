@@ -12,13 +12,19 @@
 # Check that networking is up.
 [ "$NETWORKING" = "no" ] && exit 0
 
-mongod="/usr/local/mongodb/rhel62-3.6.3/bin/mongod"
+mongod="/usr/local/mongodb/mongodb-3.6.5/bin/mongod"
+test -e "$mongod" || { echo "$mongod not existing";
+	if [ "$1" = "stop" ]; then exit 0;
+	else exit 6; fi; }
 prog=$(basename $mongod)
 
 # 配置文件
-MONGOD_CONF_FILE="/home/nginx/mongo/config/agile.conf"
+MONGOD_CONF_FILE="/usr/local/mongodb/mongodb-3.6.5/repl.conf"
+test -e "$MONGOD_CONF_FILE" || { echo "$MONGOD_CONF_FILE not existing";
+	if [ "$1" = "stop" ]; then exit 0;
+	else exit 6; fi; }
 # pid文件
-MONGOD_ID="/home/nginx/mongo/mongod.pid"
+MONGOD_ID="/var/run/mongod.pid"
 # 锁定文件
 lockfile=/var/lock/subsys/mongodb
 
@@ -27,7 +33,7 @@ start() {
     [ -x $mongod ] || exit 5
     [ -f $MONGOD_CONF_FILE ] || exit 6
     echo -n $"Starting $prog: "
-    daemon $mongod -f $MONGOD_CONF_FILE
+    daemon $mongod -f $MONGOD_CONF_FILE > /dev/null
     retval=$?
     echo
     [ $retval -eq 0 ] && touch $lockfile
