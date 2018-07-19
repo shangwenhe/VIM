@@ -1,0 +1,89 @@
+#!/bin/sh
+
+# chkconfig:   35 85 15
+# description:  redis server
+
+# Source function library.
+. /etc/rc.d/init.d/functions
+
+# Source networking configuration.
+. /etc/sysconfig/network
+
+# Check that networking is up.
+[ "$NETWORKING" = "no" ] && exit 0
+
+
+
+redis="/usr/local/redis/redis-4.0.10/src/redis-server"
+test -e "$redis" || { echo "$redis not existing";
+	if [ "$1" = "stop" ]; then exit 0;
+	else exit 6; fi; }
+
+prog=$(basename $redis)
+
+# 配置文件
+REDIS_CONF_FILE="/usr/local/redis/redis-4.0.10/repl.conf"
+test -e "$REDIS_CONF_FILE" || { echo "$REDIS_CONF_FILE not existing";
+	if [ "$1" = "stop" ]; then exit 0;
+	else exit 6; fi; }
+
+# pid文件
+REDIS_ID="/var/run/redis.pid"
+
+# 锁定文件
+lockfile=/var/lock/subsys/redis
+
+start() {
+    [ -x $redis ] || exit 5
+    [ -f $REDIS_CONF_FILE ] || exit 6
+    echo -n $"Starting $prog: "
+    daemon $redis $REDIS_CONF_FILE
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && touch $lockfile
+    return $retval
+}
+
+stop() {
+    echo -n $"Stopping $prog: "
+    killproc -d 10 $prog
+    retval=$?
+    echo
+    [ $retval -eq 0 ] && rm -f $lockfile
+    return $retval
+}
+
+restart() {
+    stop
+    sleep 1
+    start
+}
+
+
+rh_status() {
+    status $prog
+}
+
+rh_status_q() {
+    rh_status >/dev/null 2>&1
+}
+
+case "$1" in
+    start)
+        rh_status_q && exit 0
+        $1
+        ;;
+    stop)
+        rh_status_q || exit 0
+        $1
+        ;;
+    restart)
+        $1
+        ;;
+    status)
+        rh_status
+        ;;
+    *)
+        echo $"Usage: $0 {start|stop|status|restart}"
+        exit 2
+esac
