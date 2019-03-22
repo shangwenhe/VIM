@@ -1,0 +1,1 @@
+find ./* -name '*.vue' -type f -exec sed -i "" "s/\/api\/wetrunk\//\/api\/gw\/wetrunk\//g" {} \; 
